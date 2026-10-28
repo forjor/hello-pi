@@ -1,0 +1,47 @@
+{
+  "name": "Pi",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu-24.04",
+
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "installZsh": true,
+      "username": "vscode",
+      "userUid": "1000",
+      "userGid": "1000",
+      "upgradePackages": true
+    },
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "lts"
+    },
+    "ghcr.io/devcontainers/features/git:1": {
+      "version": "latest"
+    }
+  },
+
+  "mounts": [
+    "source=${localEnv:HOME}/.pi,target=/home/vscode/.pi,type=bind,consistency=cached"
+  ],
+
+  "initializeCommand": "mkdir -p ${localEnv:HOME}/.pi",
+
+  "remoteEnv": {
+    "ANTHROPIC_API_KEY": "${localEnv:ANTHROPIC_API_KEY}",
+    "GEMINI_API_KEY": "${localEnv:GEMINI_API_KEY}",
+    "XAI_API_KEY": "${localEnv:XAI_API_KEY}"
+  },
+
+  "remoteUser": "vscode",
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-vscode-remote.remote-containers"
+      ],
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "zsh"
+      }
+    }
+  },
+
+  "postCreateCommand": "sudo apt-get update && sudo apt-get install -y make && npm install -g --ignore-scripts @earendil-works/pi-coding-agent && echo 'Pi devcontainer ready. Export a provider key (ANTHROPIC_API_KEY / GEMINI_API_KEY / XAI_API_KEY) and run: make hello'"
+}
